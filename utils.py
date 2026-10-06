@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time : 2022/11/20 | 13:22
-# @Author : YangCheng
-# @Email : yangchengyjs@163.com
-# @File : utils.py
-# Software: PyCharm
 import datetime
 import numpy as np
 import torch
