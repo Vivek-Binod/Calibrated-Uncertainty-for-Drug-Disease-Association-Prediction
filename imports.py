@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time : 2022/11/18 | 16:23
-# @Author : YangCheng
-# @Email : yangchengyjs@163.com
-# @File : imports.py
-# Software: PyCharm
-# [BEGIN] 标准库
 import random
 import logging
 from typing import Optional, Union, List, Dict, Tuple, Any, Callable, Iterable, Literal, Iterator
@@ -28,9 +21,7 @@ import re
 # import yaml
 import threading
 import sqlite3
-# [END]
 
-# [BEGIN] 第三方常用库
 import requests
 from tqdm import tqdm
 import numpy as np
@@ -40,9 +31,8 @@ import pandas as pd
 # import wandb
 
 IntArray = FloatArray = BoolArray = ndarray
-# [END]
 
-# [BEGIN] PyTorch相关
+
 import torch
 import torch as th
 import torch.backends.cudnn
@@ -65,8 +55,5 @@ import networkx as nx
 
 IntTensor = FloatTensor = BoolTensor = FloatScalarTensor = SparseTensor = Tensor
 IntArrayTensor = FloatArrayTensor = BoolArrayTensor = Union[Tensor, ndarray]
-# [END]
 
-# [BEGIN] DGL相关
 import dgl
-# [END]
