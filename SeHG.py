@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time : 2022/11/18 | 16:11
-# @Author : YangCheng
-# @Email : yangchengyjs@163.com
-# @File : SeHG.py
-# Software: PyCharm
 import torch
 from sklearn.preprocessing import normalize
 from imports import *
@@ -12,7 +6,6 @@ import pickle
 import scipy.sparse
 
 
-# 规范化
 def normalize_matrix(mat: sp.csr_matrix) -> sp.csr_matrix:
     normalized_mat = normalize(mat, norm='l1', axis=1)
     return normalized_mat
@@ -21,25 +14,23 @@ def normalize_matrix(mat: sp.csr_matrix) -> sp.csr_matrix:
 #
 #  hg: dgl.DGLHeteroGraph, metapath: list[str], feat_dict: dict[NodeType, FloatTensor]
 def aggregate_metapath_neighbors(hg, node_feature_att, metapath, feat_dict) -> FloatArray:
-    etypes = set(hg.canonical_etypes)  # 返回图中的所有规范边类型,eg:{（'disease','disease-protein','disease）,.....}
+    etypes = set(hg.canonical_etypes)  eg:{（'disease','disease-protein','disease）,.....}
     etype_map = {etype[1]: etype for etype in
-                 etypes}  # 建立边map，eg:{'disease-protein':（'disease','disease-protein','disease）,.....}
-    src_ntype = etype_map[metapath[0]][0]  # 一条元路径的开始节点
-    dest_ntype = etype_map[metapath[-1]][2]  # 一条元路径的终止节点
-    assert src_ntype == dest_ntype  # 开始节点和终止节点必须统一
-    feat = feat_dict[src_ntype].cpu().numpy()  # 加载节点的特征信息
+                 etypes}  # eg:{'disease-protein':（'disease','disease-protein','disease）,.....}
+    src_ntype = etype_map[metapath[0]][0] 
+    dest_ntype = etype_map[metapath[-1]][2]  
+    assert src_ntype == dest_ntype  
+    feat = feat_dict[src_ntype].cpu().numpy() 
 
     product = None
 
-    # 对本条元路径进行节点乘法操作和特征聚合
     for etype in metapath:
         '''
         etype:('drug', 'drug_protein', 'protein'),...
         '''
         etype = etype_map[etype]
 
-        adj_mat = hg.adj_external(etype=etype, scipy_fmt='csr').astype(np.float32)  # 提取图中每步元路径关系的邻接矩阵
-        # adj_mat = hg.adj(etype=etype,scipy_fmt='csr').astype(np.float32)  # 提取图中每步元路径关系的邻接矩阵
+        adj_mat = hg.adj_external(etype=etype, scipy_fmt='csr').astype(np.float32)  
 
         normalized_adj_mat = normalize_matrix(adj_mat)
         # print('normalized_adj_mat:',normalized_adj_mat)
@@ -47,10 +38,8 @@ def aggregate_metapath_neighbors(hg, node_feature_att, metapath, feat_dict) -> F
         if product is None:
             product = normalized_adj_mat
         else:
-            # 关系矩阵乘法
             product = product.dot(normalized_adj_mat)
 
-    # 特征聚合
     # sub_g=dgl.heterograph
 
     node_feature_att = node_feature_att.cpu().detach().numpy()
@@ -121,7 +110,6 @@ class SeHG_bio(nn.Module):
         self.dropout = 0.4
         self.feature_node_name = ['drug', 'disease']
 
-        # 结点未经聚合的原始特征，作为一个特殊的元路径聚合结果
         self.num_metapaths = num_metapaths + 1
         # self.num_metapaths = num_metapaths
 
