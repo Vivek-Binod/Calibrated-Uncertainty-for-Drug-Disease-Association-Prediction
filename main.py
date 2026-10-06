@@ -9,7 +9,7 @@ from imports import *
 from SeHG import SeHG_bio
 from warnings import simplefilter
 from sklearn.model_selection import KFold
-from load_data import load, remove_graph,load_D3
+from load_data import load, remove_graph
 from utils import get_metrics_auc, set_seed, plot_result_auc, \
     plot_result_aupr, EarlyStopping, get_metrics
 import argparse
@@ -143,7 +143,7 @@ def train():
         np.save('{}_fold_test_neg_idx_data.npy'.format(fold), np.array(test_neg_idx))
 
         # load hetero_graph
-        g = load_D3(args.topk)
+        g = load(args.topk)
         # remove test from test_set
         g = remove_graph(g, test_pos_id[:, :-1]).to(device)
         # extracted drug and disease features
@@ -195,7 +195,7 @@ def train():
 
         for epoch in range(1, args.epoch + 1):
             model.train()
-            score = model(g, feature, metapath_list,epoch,fold)
+            score = model(g, feature, metapath_list)
             pred = th.sigmoid(score)
             loss = criterion(score[mask_train].cpu().flatten(),
                              label[mask_train].cpu().flatten())
@@ -226,7 +226,7 @@ def train():
 
         stopper.load_checkpoint(model)
         model.eval()
-        pred = model(g, feature, metapath_list,epoch,fold)
+        pred = model(g, feature, metapath_list)
         pred = th.sigmoid(pred).cpu().detach().numpy()
         pred_result[test_pos_idx] = pred[test_pos_idx]
         pred_result[test_neg_idx] = pred[test_neg_idx]
