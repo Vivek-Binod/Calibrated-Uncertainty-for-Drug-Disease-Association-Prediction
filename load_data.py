@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time : 2022/11/12 | 20:55
-# @Author : YangCheng
-# @Email : yangchengyjs@163.com
-# @File : load_data.py
-# Software: PyCharm
-
 import numpy as np
 import torch
 import torch as th
