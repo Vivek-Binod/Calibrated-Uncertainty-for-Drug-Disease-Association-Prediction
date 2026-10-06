@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Time : 2022/11/20 | 13:20
-# @Author : YangCheng
-# @Email : yangchengyjs@163.com
-# @File : main.py
-# Software: PyCharm
-
 from imports import *
 from SeHG import SeHG_bio
 from warnings import simplefilter
